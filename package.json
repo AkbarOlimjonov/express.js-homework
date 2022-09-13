@@ -1,0 +1,24 @@
+{
+  "name": "express.js-homework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AkbarOlimjonov/express.js-homework.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AkbarOlimjonov/express.js-homework/issues"
+  },
+  "homepage": "https://github.com/AkbarOlimjonov/express.js-homework#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "morgan": "^1.10.0"
+  }
+}
