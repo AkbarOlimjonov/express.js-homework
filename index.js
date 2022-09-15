@@ -11,13 +11,15 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 
-
+app.use(morgan('tiny'))
 
 //routes
 app.use('/', homeRouter)
 app.use('/courses', courseRouter)
 
 
+
+
 app.listen(port, () => {
-    console.log(`Server http//localhost:${port}`)
+    console.log(`Server http://localhost:${port}`)
 })

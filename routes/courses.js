@@ -42,6 +42,16 @@ router.put('/:name',(req,res)=>{
     return res.send('Course update');
 })
 
+router.delete('/:name',(req,res)=>{
+    const course = db.courses.find(val => val.name === req.params.name)
+   
+    db.courses.splice(course,1)
+   
+    return res.send('Course delete');
+})
+
+
+
 
 
 module.exports = router
