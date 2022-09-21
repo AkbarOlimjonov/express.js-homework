@@ -1,7 +1,9 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
-const port = 3000
+require('dotenv').config()
+
+const port = process.env.PORT || 3001
 
 // Importing routes
 const courseRouter = require('./routes/courses')

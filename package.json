@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/AkbarOlimjonov/express.js-homework#readme",
   "dependencies": {
+    "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "joi": "^17.6.0",
     "morgan": "^1.10.0"
