@@ -1,10 +1,14 @@
-const { Router } = require("express");
+const {
+  Router
+} = require("express");
 const router = Router();
 const db = require("../db");
 const Joi = require("joi");
 const fs = require("fs");
 const path = require("path");
-const { join } = require("path");
+const {
+  join
+} = require("path");
 
 router.post("/add", async (req, res) => {
   const schema = Joi.object({
@@ -41,15 +45,33 @@ router.post("/add", async (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  res.send(db.courses);
+  const dbPath = path.join(__dirname, "..", "data", "db.json");
+  fs.readFile(dbPath, 'utf-8', (err, val) => {
+    if (err) return res.status(400).send(err)
+    else {
+      let courses = JSON.parse(val);
+
+      res.send(courses)
+    }
+  })
 });
 
 router.put("/:name", (req, res) => {
-  const course = db.courses.find((val) => val.name === req.params.name);
+  const dbPath = path.join(__dirname, "..", "data", "db.json");
+  const database = fs.readFile(dbPath, 'utf-8', (err, val) => {
+    if (err) return res.status(400).send(err)
+    else {
+      let courses = JSON.parse(val);
 
-  course.name = req.body.name;
+      const course = db.courses.find((val) => val.name === req.params.name);
 
-  return res.send("Course update");
+      course.name = req.body.name;
+
+      return res.send("Course update");
+
+    }
+  })
+
 });
 
 router.delete("/:name", (req, res) => {
