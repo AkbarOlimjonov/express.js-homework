@@ -50,7 +50,7 @@ function validation(body){
 router.delete('/delete/:id', async (req, res) => {
     const data = await modelUser.getData()
     const id = +req.params.id
-    const idx = data.users.findIndex((val) => val.id === id)
+    const idx = data.courses.findIndex((val) => val.id === id)
 
     if (idx < 0) {
         return res.status(400).send('Id not found')
@@ -66,20 +66,24 @@ router.delete('/delete/:id', async (req, res) => {
 router.put('/update/:id', async (req, res) => {
     const id = +req.params.id;
     const data = await modelUser.getData();
-    const idx = data.courses.findIndex((val, index) => val.id === id)
-    console.log(id)
-
+    const idx = data.courses.findIndex((val, index) => val.id = id);
     if (idx < 0) {
         return res.status(400).send('Id not found')
     }
     
     if(!req.body.name){
-        req.body.name = 'Akbar'
+        req.body.name = data.courses[idx].name
+    }
+
+    if(!req.body.price){
+        req.body.price = data.courses[idx].price
     }
 
     req.body.id = id 
 
-    data.courses[idx] = req.body.name
+    data.courses[idx] = req.body
+
+    await modelUser.save(data)
 
     res.status(200).send('User updated')
 })
