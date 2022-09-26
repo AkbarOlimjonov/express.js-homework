@@ -1,85 +1,87 @@
-const {
-  Router
-} = require("express");
-const router = Router();
-const db = require("../db");
-const Joi = require("joi");
-const fs = require("fs");
-const path = require("path");
-const {
-  join
-} = require("path");
+const Joi = require('joi')
+const { Router } = require('express')
+const router = Router()
+const Course =  require('../model/Course')
+const modelUser = new Course()
 
-router.post("/add", async (req, res) => {
+router.get('/', async (req, res) => {
+    const data = await modelUser.getData()
+
+    res.status(200).send(data.courses)
+})
+
+router.get('/courses', (req, res) => {
+    const course = course.find(val => val.age === +req.query.age)
+    res.status(200).send(user)
+})
+
+router.get('/:id', (req, res) => {
+    const course = users.find(val => val.id === +req.params.id)
+    res.status(200).send(course)
+})
+
+router.post('/add', async (req, res) => {
+    const check = validation(req.body)
+
+    if (!!check.error) {
+        return res.status(400).send('Error')
+    }
+
+    const user = {
+        name: req.body.name,
+        price: req.body.price
+    }
+
+    await modelUser.create(user)
+
+    res.status(201).send('User created')
+})
+
+function validation(body){
   const schema = Joi.object({
     name: Joi.string().trim().required().min(2),
     price: Joi.number().integer().required().min(100),
   });
 
-  const validation = schema.validate(req.body);
+    return schema.validate(body)
+}
 
-  if (!!validation.error) {
-    return res.status(400).send(validation.error.message);
-  }
+// delete // update
+router.delete('/delete/:id', async (req, res) => {
+    const data = await modelUser.getData()
+    const id = +req.params.id
+    const idx = data.users.findIndex((val) => val.id === id)
 
-  const course = {
-    name: req.body.name,
-    price: req.body.price,
-    id: db.courses.length + 1,
-  };
-
-  const dbPath = path.join(__dirname, "..", "data", "db.json");
-
-  fs.readFile(dbPath, "utf-8", (err, value) => {
-    if (err) return res.status(400).send(err);
-    else {
-      let courses = JSON.parse(value);
-      courses.push(course);
-
-      fs.writeFile(dbPath, JSON.stringify(courses), (err) => {
-        if (err) return res.status(400).send(err);
-        res.status(201).send('Created');
-      });
+    if (idx < 0) {
+        return res.status(400).send('Id not found')
     }
-  });
-});
 
-router.get("/", (req, res) => {
-  const dbPath = path.join(__dirname, "..", "data", "db.json");
-  fs.readFile(dbPath, 'utf-8', (err, val) => {
-    if (err) return res.status(400).send(err)
-    else {
-      let courses = JSON.parse(val);
+    data.courses.splice(idx, 1)
 
-      res.send(courses)
+    await modelUser.save(data)
+
+    res.status(200).send('User deleted')
+})
+
+router.put('/update/:id', async (req, res) => {
+    const id = +req.params.id;
+    const data = await modelUser.getData();
+    const idx = data.courses.findIndex((val, index) => val.id === id)
+    console.log(id)
+
+    if (idx < 0) {
+        return res.status(400).send('Id not found')
     }
-  })
-});
-
-router.put("/:name", (req, res) => {
-  const dbPath = path.join(__dirname, "..", "data", "db.json");
-  const database = fs.readFile(dbPath, 'utf-8', (err, val) => {
-    if (err) return res.status(400).send(err)
-    else {
-      let courses = JSON.parse(val);
-
-      const course = db.courses.find((val) => val.name === req.params.name);
-
-      course.name = req.body.name;
-
-      return res.send("Course update");
-
+    
+    if(!req.body.name){
+        req.body.name = 'Akbar'
     }
-  })
 
-});
+    req.body.id = id 
 
-router.delete("/:name", (req, res) => {
-  const course = db.courses.find((val) => val.name === req.params.name);
+    data.courses[idx] = req.body.name
 
-  db.courses.splice(course, 1);
+    res.status(200).send('User updated')
+})
 
-  return res.send("Course delete");
-});
-
-module.exports = router;
+module.exports = router
